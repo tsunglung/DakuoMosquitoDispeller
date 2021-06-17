@@ -1,0 +1,34 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Device is already configured"
+        },
+        "error": {
+            "connection_error": "Failed to connect, please try again",
+            "invalid_auth": "Invalid authentication",
+            "unknown": "Unexpected error"
+        },
+        "flow_title": "Dakuo Mosquito Dispeller: {name}",
+        "step": {
+            "user": {
+                "title": "Dakuo Mosquito Dispeller",
+                "data": {
+                    "host": "Host",
+                    "token": "Token"
+                },
+                "description": "Please enter connection settings of your Dakuo Mosquito Dispeller."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Dakuo Mosquito Dispeller",
+                "data": {
+                    "host": "Host",
+                    "token": "Token"
+                }
+            }
+        }
+    }
+}
