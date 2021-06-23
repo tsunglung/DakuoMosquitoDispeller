@@ -3,8 +3,10 @@
   "name": "Dakuo Mosquito Dispeller",
   "config_flow": true,
   "documentation": "https://github.com/tsunglung/DakuoMosquitoDispeller",
+  "issue_tracker": "https://github.com/tsunglung/DakuoMosquitoDispeller/issues",
   "requirements": ["python-miio>=0.5.3"],
   "dependencies": [],
   "codeowners": ["@tsunglung"],
-  "version": "0.0.1"
+  "version": "0.0.1",
+  "iot_class": "local_push"
 }
