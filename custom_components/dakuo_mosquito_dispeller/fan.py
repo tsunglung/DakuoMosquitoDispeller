@@ -1,8 +1,6 @@
 """ Support for Dakuo Mosquito Dispeller."""
 import logging
 from functools import partial
-from typing import Optional
-import voluptuous as vol
 
 from miio import Device, DeviceException
 from homeassistant.const import (
@@ -11,10 +9,8 @@ from homeassistant.const import (
     ATTR_MODE
 )
 from homeassistant.exceptions import PlatformNotReady
-from homeassistant.config_entries import SOURCE_IMPORT
 from homeassistant.components.fan import (
     FanEntity,
-    SUPPORT_SET_SPEED,
     SUPPORT_PRESET_MODE,
     SPEED_OFF
 )
@@ -25,7 +21,6 @@ from .const import (
     ATTR_LIQUID_LEFT,
     ATTR_MODEL,
     ATTR_PRESET_MODE,
-    DEFAULT_NAME,
     DOMAIN,
     FAN_SPEED_LEVEL1,
     FAN_SPEED_LEVEL2,
@@ -47,7 +42,11 @@ FAN_PRESET_MODES = {
     FAN_SPEED_LEVEL2: 1,
 }
 
-async def async_setup_entry(hass, config_entry, async_add_entities, discovery_info=None):
+
+async def async_setup_entry(hass,
+                            config_entry,
+                            async_add_entities,
+                            discovery_info=None):
     # pylint: disable=unused-argument, too-many-locals
     """Set up the  Mosquito Dispeller Fan device from config."""
 
@@ -77,12 +76,14 @@ async def async_setup_entry(hass, config_entry, async_add_entities, discovery_in
         raise PlatformNotReady
 
     device = MosquitoDispellerFan(
-        "{} Switch ".format(name[:-5]), miio_device, model, unique_id, miio_uid)
+        "{} Switch ".format(
+            name[:-5]), miio_device, model, unique_id, miio_uid)
     hass.data[MOSQUITO_DISPELLER_DATA][host] = device
     async_add_entities([device], update_before_add=True)
 
+
 class MosquitoDispellerFan(FanEntity):
-# pylint: disable=too-many-instance-attributes
+    # pylint: disable=too-many-instance-attributes
     """Representation of a Mosquito Dispeller Fan."""
 
     def __init__(self, name, device, model, unique_id, miio_uid):
@@ -175,7 +176,8 @@ class MosquitoDispellerFan(FanEntity):
         """Call a miio device command handling error messages."""
 
         try:
-            result = await self.hass.async_add_job(partial(func, *args, **kwargs))
+            result = await self.hass.async_add_job(partial(
+                func, *args, **kwargs))
 
             _LOGGER.debug("Response received from miio device: %s", result)
 
@@ -299,4 +301,3 @@ class MosquitoDispellerFan(FanEntity):
                 "Got exception while fetching the state: %s",
                 ex
             )
-

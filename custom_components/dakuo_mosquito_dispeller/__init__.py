@@ -1,5 +1,4 @@
 """Dakuo Mosquito Dispeller integration."""
-import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -7,6 +6,7 @@ from .const import (
     DOMAIN,
     DOMAINS
 )
+
 
 async def async_setup(hass: HomeAssistant, hass_config: dict):
     """Set up the Dakuo Mosquito Dispeller component."""

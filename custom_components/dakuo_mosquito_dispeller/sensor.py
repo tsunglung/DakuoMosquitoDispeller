@@ -9,7 +9,7 @@ from homeassistant.const import (
     PERCENTAGE
 )
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.config_entries import SOURCE_IMPORT
+from homeassistant.exceptions import PlatformNotReady
 from .const import (
     ATTR_MODEL,
     DOMAIN,
@@ -22,7 +22,6 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, config_entry, async_add_entities):
     """Set up the Mosquito Dispeller Sensor from a config entry."""
-    entities = []
 
     if MOSQUITO_DISPELLER_DATA not in hass.data:
         hass.data[MOSQUITO_DISPELLER_DATA] = {}
@@ -50,7 +49,8 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
         raise PlatformNotReady
 
     device = MosquitoDispellerSensor(
-        "{} Liquid Left ".format(name[:-5]), miio_device, model, unique_id, miio_uid)
+        "{} Liquid Left ".format(
+            name[:-5]), miio_device, model, unique_id, miio_uid)
     hass.data[MOSQUITO_DISPELLER_DATA][host] = device
     async_add_entities([device], update_before_add=True)
 
@@ -114,7 +114,8 @@ class MosquitoDispellerSensor(SensorEntity):
     async def _try_command(self, mask_error, func, *args, **kwargs):
         """Call a vacuum command handling error messages."""
         try:
-            await self.hass.async_add_executor_job(partial(func, *args, **kwargs))
+            await self.hass.async_add_executor_job(partial(
+                func, *args, **kwargs))
             return True
         except DeviceException as exc:
             _LOGGER.error(mask_error, exc)

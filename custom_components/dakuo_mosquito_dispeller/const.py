@@ -3,7 +3,7 @@
 DEFAULT_NAME = "Dakuo Mosquito Dispeller"
 
 DOMAIN = "dakuo_mosquito_dispeller"
-DOMAINS = [ "sensor", "fan" ]
+DOMAINS = ["sensor", "fan"]
 
 MOSQUITO_DISPELLER_DATA = "mosquito_dispeller_data"
 

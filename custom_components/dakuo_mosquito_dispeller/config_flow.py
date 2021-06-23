@@ -6,6 +6,7 @@ from typing import Optional
 import voluptuous as vol
 from homeassistant.config_entries import (
     CONN_CLASS_LOCAL_PUSH,
+    SOURCE_IMPORT,
     ConfigFlow,
     OptionsFlow,
     ConfigEntry
@@ -22,10 +23,14 @@ from .const import DOMAIN, DEFAULT_NAME
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
+async def async_setup_platform(hass,
+                               config,
+                               async_add_entities,
+                               discovery_info=None):
     """Import Dakuo Mosquito Dispeller configuration from YAML."""
     _LOGGER.warning(
-        "Loading Dakuo Mosquito Dispeller via platform setup is deprecated; Please remove it from your configuration"
+        "Loading Dakuo Mosquito Dispeller via platform setup is deprecated;"
+        "Please remove it from your configuration"
     )
     hass.async_create_task(
         hass.config_entries.flow.async_init(
@@ -34,6 +39,7 @@ async def async_setup_platform(hass, config, async_add_entities, discovery_info=
             data=config,
         )
     )
+
 
 async def validate_input(hass: HomeAssistant, data):
     """Validate the user input allows us to connect.
@@ -60,6 +66,7 @@ async def validate_input(hass: HomeAssistant, data):
         "title": f"{DEFAULT_NAME}",
         "mac": f"{device_info.mac_address}",
     }
+
 
 class MosquitoDispellerFlowHandler(ConfigFlow, domain=DOMAIN):
     """Handle a Dakuo Mosquito Dispeller config flow."""
@@ -90,7 +97,7 @@ class MosquitoDispellerFlowHandler(ConfigFlow, domain=DOMAIN):
                 return self.async_abort(reason="connection_error")
 
             info = await validate_input(self.hass, user_input)
-            #prevent setting up the same account twice
+            # prevent setting up the same account twice
             await self.async_set_unique_id(info["mac"])
             self._abort_if_unique_id_configured()
             self._name = info["title"]
@@ -126,7 +133,6 @@ class MosquitoDispellerFlowHandler(ConfigFlow, domain=DOMAIN):
             return
         self._host = user_input.get(CONF_HOST, "")
         self._token = user_input.get(CONF_TOKEN, "")
-
 
     @callback
     def _async_get_entry(self):
