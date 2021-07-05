@@ -16,21 +16,23 @@ jobs:
         continue-on-error: true
         uses: rojopolis/spellcheck-github-actions@0.14.0
         with:
-          config_path: .github/workflows/spellcheck.yml
+          config_path: spellcheck.yml
 
   python_linting:
     name: Python linting
     runs-on: ubuntu-latest
     steps:
-      - name: Check out source repository
+      - name: 📦 Check out source repository
         uses: actions/checkout@v2
-      - name: Set up Python environment
+      - name: 📦 Set up Python environment
         uses: actions/setup-python@v1
         with:
           python-version: "3.8"
-      - name: flake8 Lint
+      - name: ✅ flake8 Lint
         continue-on-error: true
         uses: py-actions/flake8@v1
+        with:
+          max-line-length: "120"
 
   validate:
     runs-on: "ubuntu-latest"

@@ -45,7 +45,7 @@ async def async_setup_entry(hass, config_entry, async_add_entities):
             model = device_info.model
         miio_uid = device_info.raw['uid']
         unique_id = "sensor-{}".format(device_info.mac_address)
-    except DeviceException:
+    except DeviceException as ex:
         raise PlatformNotReady
 
     device = MosquitoDispellerSensor(
@@ -117,8 +117,8 @@ class MosquitoDispellerSensor(SensorEntity):
             await self.hass.async_add_executor_job(partial(
                 func, *args, **kwargs))
             return True
-        except DeviceException as exc:
-            _LOGGER.error(mask_error, exc)
+        except DeviceException as ex:
+            _LOGGER.error(mask_error, ex)
             return False
 
     async def async_update(self):
