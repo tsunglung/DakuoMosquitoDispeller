@@ -261,11 +261,10 @@ class MosquitoDispellerFan(FanEntity):
                 [{"piid": 1, "siid": 6, "did": str(self._did)}]
             )
 
+            self._available = False
             if status[0]['code'] == 0:
                 self._state = status[0]['value']
                 self._available = True
-            else:
-                self._available = False
 
             status = await self.hass.async_add_job(
                 self._device.raw_command,
@@ -273,6 +272,7 @@ class MosquitoDispellerFan(FanEntity):
                 [{"piid": 2, "siid": 6, "did": str(self._did)}]
             )
 
+            self._available = False
             if status[0]['code'] == 0:
                 self._preset_mode = status[0]['value']
                 if self._preset_mode == 0:
@@ -280,20 +280,6 @@ class MosquitoDispellerFan(FanEntity):
                 else:
                     self._preset_mode_attr = FAN_SPEED_LEVEL2
                 self._available = True
-            else:
-                self._available = False
-
-            status = await self.hass.async_add_job(
-                self._device.raw_command,
-                "get_properties",
-                [{"piid": 1, "siid": 5, "did": str(self._did)}]
-            )
-
-            if status[0]['code'] == 0:
-                self._liquid_left = status[0]['value']
-                self._available = True
-            else:
-                self._available = False
 
         except DeviceException as ex:
             self._available = False
@@ -301,3 +287,20 @@ class MosquitoDispellerFan(FanEntity):
                 "Got exception while fetching the state: %s",
                 ex
             )
+            return
+
+        try:
+            status = await self.hass.async_add_job(
+                self._device.raw_command,
+                "get_properties",
+                [{"piid": 1, "siid": 5, "did": str(self._did)}]
+            )
+
+            self._available = False
+            if status[0]['code'] == 0:
+                self._liquid_left = status[0]['value']
+                self._available = True
+
+        except DeviceException as ex:
+            # If get exception while getting liquid-left, it means liquid left 0.
+            self._liquid_left = 0

@@ -141,6 +141,16 @@ class MosquitoDispellerSensor(SensorEntity):
                 else:
                     self._did = self._unique_id
 
+            self._available = True
+        except DeviceException as ex:
+            self._available = False
+            _LOGGER.error(
+                "Got exception while fetching the state: %s",
+                ex
+            )
+            return
+
+        try:
             status = await self.hass.async_add_job(
                 self._device.raw_command,
                 "get_properties",
@@ -148,15 +158,11 @@ class MosquitoDispellerSensor(SensorEntity):
             )
             _LOGGER.info("Got new status: %s", status)
 
+            self._available = False
             if status[0]['code'] == 0:
                 self._state = status[0]['value']
                 self._available = True
-            else:
-                self._available = False
-
         except DeviceException as ex:
-            self._available = False
-            _LOGGER.error(
-                "Got exception while fetching the state: %s",
-                ex
-            )
+            # If get exception while getting liquid-left, it means liquid left 0.
+            self._state = 0
+
